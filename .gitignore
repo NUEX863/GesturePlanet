@@ -4,4 +4,3 @@ qa/
 *.tar.gz
 *.part
 node_modules/
-docs/
