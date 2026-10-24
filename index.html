@@ -182,36 +182,101 @@
       });
     }
     async function fetchHandAsset(file,signal,onProgress){
-      const url=new URL('assets/mediapipe-hands/'+file.name,document.baseURI).href;
-      for(let attempt=0;attempt<2;attempt++){
-        checkAborted(signal);
-        const request=new AbortController();let idleTimer,timedOut=false;
-        const cancel=()=>request.abort();signal.addEventListener('abort',cancel,{once:true});
-        const expire=()=>{timedOut=true;request.abort()};
-        const totalTimer=setTimeout(expire,60000);
-        const heartbeat=()=>{clearTimeout(idleTimer);idleTimer=setTimeout(expire,12000)};
-        try{
-          heartbeat();
-          const response=await fetch(url,{signal:request.signal,cache:attempt?'reload':'default'});
-          if(!response.ok)throw Object.assign(handError(file.name+' 返回 HTTP '+response.status),{status:response.status});
-          const chunks=[];let length=0;
-          if(response.body?.getReader){
-            const reader=response.body.getReader();
-            while(true){const {done,value}=await reader.read();if(done)break;heartbeat();chunks.push(value);length+=value.length;onProgress(length)}
-          }else{const bytes=new Uint8Array(await response.arrayBuffer());chunks.push(bytes);length=bytes.length;onProgress(length)}
-          if(length!==file.size)throw handError(file.name+' 文件不完整');
-          const bytes=new Uint8Array(length);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length}
-          const digest=await crypto.subtle.digest('SHA-256',bytes);
-          if(btoa(String.fromCharCode(...new Uint8Array(digest)))!==file.hash)throw handError(file.name+' 校验失败');
-          checkAborted(signal);
-          return new Blob([bytes],{type:file.name.endsWith('.js')?'text/javascript':file.name.endsWith('.wasm')?'application/wasm':'application/octet-stream'});
-        }catch(error){
-          checkAborted(signal);
-          if(error.status===404||attempt===1)throw handError(timedOut?file.name+' 下载超时':error.name==='HandLoadError'?error.message:file.name+' 下载失败');
-          onProgress(0);console.warn('Retrying same-site hand resource:',file.name,error.message);
-        }finally{clearTimeout(idleTimer);clearTimeout(totalTimer);signal.removeEventListener('abort',cancel);request.abort()}
-      }
-    }
+	  const url=new URL('assets/mediapipe-hands/'+file.name,document.baseURI).href;
+
+	  for(let attempt=0;attempt<2;attempt++){
+	    checkAborted(signal);
+
+	    const request=new AbortController();
+	    const cancel=()=>request.abort();
+	    signal.addEventListener('abort',cancel,{once:true});
+
+	    try{
+	      const response=await fetch(url,{
+	        signal:request.signal,
+	        cache:attempt?'reload':'default'
+	      });
+
+	      if(!response.ok){
+	        throw Object.assign(
+	          handError(file.name+' 返回 HTTP '+response.status),
+	          {status:response.status}
+	        );
+	      }
+
+	      const chunks=[];
+	      let length=0;
+
+	      if(response.body?.getReader){
+	        const reader=response.body.getReader();
+
+	        while(true){
+	          const {done,value}=await reader.read();
+	          if(done)break;
+
+	          chunks.push(value);
+	          length+=value.length;
+	          onProgress(length);
+	        }
+	      }else{
+	        const bytes=new Uint8Array(await response.arrayBuffer());
+	        chunks.push(bytes);
+	        length=bytes.length;
+	        onProgress(length);
+	      }
+
+	      if(length!==file.size){
+	        throw handError(file.name+' 文件不完整');
+	      }
+
+	      const bytes=new Uint8Array(length);
+	      let offset=0;
+
+	      for(const chunk of chunks){
+	        bytes.set(chunk,offset);
+	        offset+=chunk.length;
+	      }
+
+	      const digest=await crypto.subtle.digest('SHA-256',bytes);
+
+	      if(btoa(String.fromCharCode(...new Uint8Array(digest)))!==file.hash){
+	        throw handError(file.name+' 校验失败');
+	      }
+
+	      checkAborted(signal);
+
+	      return new Blob([bytes],{
+	        type:file.name.endsWith('.js')
+	          ?'text/javascript'
+	          :file.name.endsWith('.wasm')
+	            ?'application/wasm'
+	            :'application/octet-stream'
+	      });
+
+	    }catch(error){
+	      checkAborted(signal);
+
+	      if(error.status===404||attempt===1){
+	        throw handError(
+	          error.name==='HandLoadError'
+	            ?error.message
+	            :file.name+' 下载失败'
+	        );
+	      }
+
+	      onProgress(0);
+	      console.warn(
+	        'Retrying same-site hand resource:',
+	        file.name,
+	        error.message
+	      );
+
+	    }finally{
+	      signal.removeEventListener('abort',cancel);
+	      request.abort();
+	    }
+	  }
+	}
     async function prepareHandAssets(signal){
       if(location.protocol==='file:')throw handError('请通过本地预览或 GitHub Pages 打开，直接双击文件无法读取模型');
       // Use the SDK's exact feature probe, including instantiation, so both
