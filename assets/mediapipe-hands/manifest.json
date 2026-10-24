@@ -1,0 +1,16 @@
+{
+  "package": "@mediapipe/hands",
+  "version": "0.4.1675469240",
+  "source": "https://unpkg.com/@mediapipe/hands@0.4.1675469240/?meta",
+  "files": [
+    {"name":"hands.js","size":45581,"hash":"poshyVU9YUOE9/RZYi5G4C48nP33OSkVovodYV4zhHM="},
+    {"name":"hands.binarypb","size":550,"hash":"q3bEIV/KmcwtsbWIXLg5jSEOWevmhSRfcuaStLWEIeQ="},
+    {"name":"hands_solution_packed_assets_loader.js","size":8327,"hash":"0FwHOmKgyNLSHBi8jxWEJOzgB46gCmNulScIOxDKHhc="},
+    {"name":"hands_solution_packed_assets.data","size":4326731,"hash":"vc57Zr/Fs5uoakd3XJjgsYb+c/gwjCJ5+FKvTIn/30I="},
+    {"name":"hand_landmark_full.tflite","size":5478688,"hash":"jAJogsnsBZzg+OdSZr7lqaI8NBpA4AAN91U3TT0bm2g="},
+    {"name":"hands_solution_simd_wasm_bin.js","size":276479,"hash":"dyAXLgd1Y25klV+xCRlYyClOAaoQDDJytZsqVDwCjLU="},
+    {"name":"hands_solution_simd_wasm_bin.wasm","size":6026259,"hash":"eO9+uG68ZCSsBrE/ibmh/AH/NeB1ION96YiHz4jAZlM="},
+    {"name":"hands_solution_wasm_bin.js","size":276474,"hash":"Lh+qmWWof0ljFuhXMcQb3h2bB91Ej2zTD1wiYrzTXik="},
+    {"name":"hands_solution_wasm_bin.wasm","size":5917209,"hash":"TnDq+AY+DprBDmgtnWtVwI0HiPCo1Jkl4uSEY2Um4Vc="}
+  ]
+}

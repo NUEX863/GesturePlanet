@@ -1,0 +1,7 @@
+# Previous hosting preparation is not part of the GitHub Pages site.
+sites/
+qa/
+*.tar.gz
+*.part
+node_modules/
+docs/

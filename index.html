@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07090d">
+  <meta name="description" content="一颗只为你点亮的星球">
+  <title>A Universe for You</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta property="og:title" content="A Planet for You">
+  <meta property="og:description" content="一颗只为你点亮的星球。伸出手，施展魔法吧！">
+  <meta property="og:type" content="website">
+  <style>
+    :root{color-scheme:dark;--ink:#f0eae0;--muted:#95969e;--orange:#ff9a50;--line:rgba(224,225,238,.14)}
+    *{box-sizing:border-box}body{margin:0;background:#07090d;color:var(--ink);font-family:"Segoe UI","Microsoft YaHei",sans-serif;overflow:hidden}button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid var(--orange);outline-offset:5px}button:disabled{cursor:wait;opacity:.65}
+    #universe{position:fixed;inset:0;width:100%;height:100%;touch-action:none;outline:none;cursor:grab}#universe:active{cursor:grabbing}
+    .vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 48%,transparent 35%,rgba(3,5,9,.35) 100%)}
+    header{position:absolute;left:42px;right:42px;top:30px;display:flex;align-items:center;justify-content:space-between;pointer-events:none}.brand{display:flex;align-items:center;gap:13px}.brand-mark{width:32px;height:32px;border:1px solid #d8b596;border-radius:50%;position:relative;transform:rotate(-28deg)}.brand-mark:before{content:"";position:absolute;inset:10px -9px;border:1px solid #d8b596;border-radius:50%}.brand-mark:after{content:"";position:absolute;inset:9px;background:#e8b17d;border-radius:50%}.brand-name{font-size:15px;letter-spacing:4px}.brand-sub{font:9px/1.8 Consolas,monospace;letter-spacing:2.1px;color:var(--muted)}.edition{display:flex;align-items:center;gap:14px;font:10px Consolas,monospace;letter-spacing:2px;color:#c2b6a8}.edition:before{content:"";width:5px;height:5px;background:var(--orange);border-radius:50%;box-shadow:0 0 12px var(--orange)}
+    .intro{position:absolute;top:117px;left:43px;pointer-events:none}.eyebrow{font:10px Consolas,monospace;letter-spacing:3px;color:var(--orange)}h1{font-size:clamp(25px,2.8vw,43px);font-weight:350;letter-spacing:5px;line-height:1.5;margin:14px 0 9px}h1 span{color:var(--orange)}.intro p{color:#9e9da2;font-size:12px;letter-spacing:1.6px;line-height:2;margin:0}
+    .coord{position:absolute;left:44px;top:46%;display:flex;gap:15px;align-items:center;pointer-events:none}.coord-line{height:120px;width:1px;background:linear-gradient(transparent,#766352,transparent)}.coord-text{font:9px/2.5 Consolas,monospace;letter-spacing:2px;color:#85858e}.coord-text strong{color:#c7beb4;font-weight:400}.planet-tag{position:absolute;right:24%;top:35%;pointer-events:none;color:#ddd1c4;font:10px Consolas,monospace;letter-spacing:2px;padding-left:50px}.planet-tag:before{content:"";position:absolute;left:0;top:6px;width:36px;height:1px;background:#8c6c4c}.planet-tag small{display:block;font-size:8px;color:#86838a;margin-top:7px;letter-spacing:1.5px}
+    .tools{position:absolute;right:39px;top:112px;display:flex;gap:9px}.icon-btn{background:rgba(14,17,23,.7);border:1px solid var(--line);width:37px;height:37px;border-radius:50%;display:grid;place-items:center;transition:background .2s,border-color .2s}.icon-btn:hover{background:#25201d;border-color:#a77850}.icon-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.4}
+    .telemetry{position:absolute;right:43px;top:43%;pointer-events:none;width:90px}.telemetry .label{font:9px Consolas,monospace;letter-spacing:2px;color:#848690}.distance{font:30px/1.8 Consolas,monospace;font-weight:300;color:#dbcec1}.distance small{font-size:10px;color:#89848a;margin-left:5px}.meter{height:2px;background:#323139;width:88px}.meter span{display:block;width:35%;height:2px;background:var(--orange);box-shadow:0 0 7px #ff9a5055}.telemetry .hint{font:8px/2 Consolas,monospace;letter-spacing:1px;color:#777983;margin-top:12px}
+    .bottom{position:absolute;bottom:34px;left:42px;right:42px;display:grid;grid-template-columns:215px minmax(420px,630px) 190px;align-items:end;justify-content:space-between;gap:28px}.camera-card{position:relative;width:215px;height:138px;border:1px solid #ffffff1c;background:#0c1015b3;border-radius:9px;overflow:hidden;backdrop-filter:blur(12px)}#camera{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);opacity:.65}#skeleton{position:absolute;inset:0;width:100%;height:100%;transform:scaleX(-1)}.camera-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;color:#85858e;font-size:10px;letter-spacing:1px}.camera-overlay svg{width:25px;height:25px;stroke:#a88b72;fill:none;stroke-width:1.2}.camera-label{position:absolute;left:11px;right:11px;top:10px;display:flex;justify-content:space-between;align-items:center;font:8px Consolas,monospace;letter-spacing:1.4px;color:#c9b8a8}.live-dot{width:4px;height:4px;background:#737780;border-radius:50%;display:inline-block;margin-right:5px}.live-dot.on{background:#e8ae76;box-shadow:0 0 9px #fba358}.camera-footer{position:absolute;bottom:8px;left:10px;right:10px;font-size:9px;color:#b9b2ad;display:flex;justify-content:space-between}.privacy{margin-top:9px;font-size:9px;color:#6f737e;letter-spacing:.6px}
+    .guide{padding-bottom:0}.guide-title{display:flex;align-items:center;justify-content:center;gap:11px;font-size:11px;letter-spacing:2px;color:#d4c7ba;margin-bottom:18px}.guide-title:before,.guide-title:after{content:"";width:24px;height:1px;background:#79624b}.gestures{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:linear-gradient(90deg,transparent,#11151b55,transparent);padding:18px 0}.gesture{padding:0 19px;display:flex;align-items:center;gap:12px}.gesture+.gesture{border-left:1px solid var(--line)}.gesture svg{width:28px;height:32px;flex-shrink:0;fill:none;stroke:#d1ae8c;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}.gesture strong{display:block;font-size:11px;letter-spacing:1px;font-weight:400;white-space:nowrap}.gesture p{font-size:9px;color:#85858f;margin:7px 0 0;white-space:nowrap;letter-spacing:.3px}.mouse-hint{font-size:9px;color:#747782;text-align:center;margin-top:12px;letter-spacing:1px}.gesture.active strong{color:#ffb36f}.gesture.active svg{stroke:#ffad67;filter:drop-shadow(0 0 6px #ff8b3944)}
+    .connection{display:flex;align-items:flex-end;flex-direction:column;padding-bottom:1px}.status{font-size:10px;line-height:1.7;color:#bbb2aa;text-align:right;max-width:210px;min-height:34px;margin-bottom:10px}.primary{border:1px solid #d59b684d;background:#d2915220;border-radius:5px;padding:10px 15px;color:#e2b78f;font-size:10px;letter-spacing:1px;min-width:145px}.primary:hover{background:#d2915238}.footnote{font:8px Consolas,monospace;letter-spacing:1.8px;color:#626775;margin-top:14px}.corner{position:absolute;left:50%;bottom:226px;transform:translateX(-50%);pointer-events:none;font:8px Consolas,monospace;letter-spacing:3px;color:#7c6b5b}.corner span{color:#cbb59f;margin-right:7px}
+    .toast{position:absolute;top:28px;left:50%;transform:translateX(-50%);max-width:min(520px,85vw);padding:12px 18px;background:#191a1eed;border:1px solid #f7ba7c40;border-radius:6px;font-size:12px;line-height:1.7;text-align:center;z-index:8}.toast:empty{display:none}dialog{background:#10141aef;color:var(--ink);border:1px solid #f9bd8440;border-radius:12px;padding:30px;max-width:460px;width:calc(100% - 40px);box-shadow:0 24px 120px #000}dialog::backdrop{background:#0009;backdrop-filter:blur(8px)}dialog h2{font-weight:400;font-size:21px;letter-spacing:3px;margin-top:0}dialog p{font-size:12px;color:#b1acaa;line-height:2}dialog b{color:#e1b68e;font-weight:500}dialog button{margin-top:8px}#fatal{display:none;position:absolute;inset:35% 20%;text-align:center;font-size:14px;line-height:2;background:#111;padding:25px;z-index:3}
+    @media(max-width:1100px){.bottom{grid-template-columns:170px minmax(340px,520px);gap:20px}.camera-card{width:170px;height:115px}.connection{position:absolute;bottom:170px;right:0}.gesture{padding:0 12px;gap:8px}.gesture svg{width:22px}.planet-tag{right:18%;top:31%}.corner{bottom:208px}.intro p{font-size:11px}}
+    @media(max-width:680px){header{left:22px;right:22px;top:22px}.brand-name{font-size:13px}.brand-sub{font-size:7px}.edition{font-size:8px;letter-spacing:1px}.intro{left:24px;top:98px}h1{font-size:27px;letter-spacing:3px;margin:10px 0 6px}.intro p{font-size:10px;letter-spacing:.5px}.tools{top:94px;right:22px;flex-direction:column}.coord,.planet-tag,.corner{display:none}.telemetry{right:22px;top:40%;width:60px}.distance{font-size:22px}.meter{width:58px}.telemetry .hint{display:none}.bottom{left:22px;right:22px;bottom:20px;display:flex;flex-wrap:wrap;gap:12px}.camera-wrap{position:absolute;bottom:137px;left:0}.camera-card{width:116px;height:79px}.privacy{display:none}.camera-footer{font-size:8px}.camera-label{font-size:7px;letter-spacing:.3px}.camera-overlay{font-size:8px}.camera-overlay svg{width:18px;height:18px}.connection{bottom:140px}.status{font-size:9px;min-height:16px;max-width:180px;margin-bottom:6px}.primary{min-width:120px;padding:8px 10px;font-size:9px}.footnote{display:none}.guide{width:100%}.guide-title{font-size:10px;margin-bottom:12px}.gestures{padding:14px 0}.gesture{padding:0 8px;gap:6px}.gesture strong{font-size:10px;letter-spacing:0}.gesture p{font-size:8px}.gesture svg{width:20px}.mouse-hint{font-size:8px;margin-top:10px}.toast{top:70px;font-size:10px}}
+    @media(max-height:620px) and (min-width:681px){.intro{top:90px}h1{font-size:25px}.bottom{bottom:20px}.camera-card{height:95px}.corner{display:none}.coord{display:none}.planet-tag{top:29%}.connection{bottom:140px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+    @media(max-width:680px){.bottom{bottom:max(20px,env(safe-area-inset-bottom))}header{top:max(22px,env(safe-area-inset-top))}dialog{max-height:85dvh;overflow:auto}}
+    @media(max-width:680px){.gesture{flex-direction:column;text-align:center;min-width:0;gap:5px;padding:0 4px}.gesture svg{height:25px}.gesture p{white-space:normal;line-height:1.5;margin-top:4px}.gestures{padding:11px 0}.camera-wrap{bottom:151px}.connection{bottom:154px}.telemetry{top:33%;opacity:.7}.guide-title{letter-spacing:1px}.edition{max-width:102px;line-height:1.6}.camera-label{left:7px;right:7px}}
+  </style>
+</head>
+<body>
+  <canvas id="universe" tabindex="0" aria-label="可交互的橙色粒子星球。拖动旋转，滚轮或上下方向键缩放，左右方向键旋转，R 键复位。"></canvas>
+  <div class="vignette"></div>
+  <header><div class="brand"><i class="brand-mark" aria-hidden="true"></i><div><div class="brand-name">魔法星球</div><div class="brand-sub">A Planet FOR YOU</div></div></div><div class="edition"></div></header>
+  <section class="intro"><div class="eyebrow">THE BEGINNING</div><h1>👩‍🚀<br></h1><p>送你一颗，只为你亮起的星球。<br>伸出手 施展魔法吧！</p></section>
+  <div class="tools"><button class="icon-btn" id="reset" title="回到初始视角（R）" aria-label="回到初始视角"><svg viewBox="0 0 24 24"><path d="M4 11a8 8 0 1 1 2 6M4 4v7h7"/></svg></button><button class="icon-btn" id="help" title="手势说明" aria-label="查看手势说明"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 8.8a2.6 2.6 0 0 1 5 1c0 2-2.5 2-2.5 4M12 16v1"/></svg></button><button class="icon-btn" id="fullscreen" title="全屏" aria-label="切换全屏"><svg viewBox="0 0 24 24"><path d="M8 4H4v4m12-4h4v4M4 16v4h4m8 0h4v-4"/></svg></button></div>
+  <div class="coord"><div class="coord-line"></div><div class="coord-text">OUR LITTLE<br>UNIVERSE<br><strong>∞ POSSIBILITIES</strong><br>ONE & ONLY YOU</div></div>
+  <div class="planet-tag">YOU ARE HERE<small>THE CENTER OF the UNIVERSE</small></div>
+  <div class="telemetry"><div class="label">DISTANCE</div><div class="distance"><span id="distance">10.8</span><small>AU</small></div><div class="meter"><span id="distance-meter"></span></div><div class="hint">ORBIT LOCKED<br>LOOKING AT YOU</div></div>
+  <div class="corner"><span>✦</span> EVERY PARTICLE, A LITTLE LOVE</div>
+  <div class="bottom">
+    <div class="camera-wrap"><div class="camera-card"><video id="camera" autoplay playsinline muted></video><canvas id="skeleton" width="430" height="276"></canvas><div class="camera-overlay" id="camera-overlay"><svg viewBox="0 0 32 32"><rect x="4" y="8" width="24" height="18" rx="3"/><circle cx="16" cy="17" r="5"/><path d="M11 8l2-3h6l2 3"/></svg><span id="camera-caption">等待摄像头连接</span></div><div class="camera-label"><span><i class="live-dot" id="live-dot"></i>GESTURE SENSOR</span><span>01</span></div><div class="camera-footer"><span id="tracking">尚未连接</span><span id="gesture-name">STANDBY</span></div></div><div class="privacy">画面仅在你的设备上处理，不上传、不保存</div></div>
+    <div class="guide"><div class="guide-title">用手，触碰这片宇宙</div><div class="gestures"><div class="gesture" id="g-rotate"><svg viewBox="0 0 32 36"><path d="M10 24V14c0-3 4-3 4 0v5-10c0-3 4-3 4 0v10-7c0-3 4-3 4 0v8-4c0-3 4-3 4 0v9c0 7-13 9-17 3l-5-7c-2-3 1-5 3-3l3 3M4 10C4 5 9 2 13 3M4 10l-2-3m2 3 3-2"/></svg><div><strong>转动手掌</strong><p>顺逆旋转 · 探索星球</p></div></div><div class="gesture" id="g-fist"><svg viewBox="0 0 32 36"><path d="M7 20V12c0-3 4-3 4 0v5-8c0-3 4-3 4 0v8-9c0-3 4-3 4 0v9-6c0-3 4-3 4 0v9l2-3c2-2 5 0 3 3l-6 10H11L7 24zM5 5h7M5 5v7m0-7 5 5"/></svg><div><strong>握拳，向后收</strong><p>先慢后快 · 远离星球</p></div></div><div class="gesture" id="g-open"><svg viewBox="0 0 32 36"><path d="M8 23 4 17c-2-3 1-5 3-2l4 4-3-12c-1-3 3-4 4-1l3 11V4c0-3 4-3 4 0v13l2-11c1-3 4-2 4 1l-2 13 3-6c1-3 5-1 3 2l-6 14H12z"/></svg><div><strong>张开，向前推</strong><p>先快后慢 · 靠近星球</p></div></div></div><div class="mouse-hint">也可以使用鼠标拖动旋转 · 滚轮缩放 · R 复位</div></div>
+    <div class="connection"><div class="status" id="status" role="status" aria-live="polite">正在请求摄像头权限…</div><button class="primary" id="camera-toggle">连接摄像头</button><div class="footnote">MADE OF STARDUST & LOVE</div></div>
+  </div>
+  <div class="toast" id="toast" role="status"></div><div id="fatal" role="alert"></div>
+  <dialog id="help-dialog"><h2>把宇宙，交到你手里。</h2><p>让<b>一只完整的手</b>出现在摄像头画面中，掌心朝向镜头，停留片刻后开始。</p><p><b>旋转：</b>像转动方向盘一样转动手腕，星球会跟随顺时针或逆时针旋转。<br><b>远离：</b>先握拳停顿一下，再把手向身体收回，镜头先慢后快拉远。<br><b>靠近：</b>先五指张开停顿一下，再把手伸向摄像头，镜头先快后慢推进。</p><p>每次更换手势会重新确定起点。换手、手离开画面后再进入，也会重新校准。到达最近距离后会自动停止。</p><p>鼠标拖动 / 单指拖动旋转，滚轮 / 双指捏合缩放。聚焦星球后也可使用方向键。手势功能首次加载需联网；摄像头画面只在本机处理。</p><button class="primary" id="close-help">开始探索</button></dialog>
+  <script>
+  (() => {
+    'use strict';
+    const $ = id => document.getElementById(id);
+    const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+    const MIN_DISTANCE=3.25, MAX_DISTANCE=25, INITIAL_DISTANCE=10.8;
+    const state={distance:INITIAL_DISTANCE,targetDistance:INITIAL_DISTANCE,yaw:.18,targetYaw:.18,pitch:.30,targetPitch:.30,roll:-.23,targetRoll:-.23};
+    const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let toastTimer;
+    function toast(message){$('toast').textContent=message;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',4600)}
+    function resetView(){Object.assign(state,{targetDistance:INITIAL_DISTANCE,targetYaw:.18,targetPitch:.30,targetRoll:-.23});resetHand();toast('已回到最初遇见这颗星球的地方。')}
+    $('reset').onclick=resetView;$('help').onclick=()=>$('help-dialog').showModal();$('close-help').onclick=()=>$('help-dialog').close();
+    $('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch{toast('当前浏览器不支持全屏，请使用浏览器全屏功能。')}};
+
+    // A self-contained WebGL renderer: no graphics dependency or build step.
+    const canvas=$('universe'),gl=canvas.getContext('webgl',{alpha:false,antialias:true,powerPreference:'high-performance'});
+    let renderScene=()=>{};
+    if(!gl){$('fatal').style.display='block';$('fatal').textContent='浏览器暂时无法绘制 3D 星球。请开启硬件加速，或使用新版 Chrome / Edge。'}
+    else{
+      const vertex=`attribute vec3 aPosition;attribute vec3 aColor;attribute float aSize;attribute float aKind;
+      uniform mat4 uView;uniform mat4 uProjection;uniform float uTime;uniform float uPixelRatio;
+      varying vec3 vColor;varying float vKind;varying float vAlpha;
+      void main(){vec3 p=aPosition;float k=aKind;vKind=k;vColor=aColor;
+        if(k<1.5){float a=uTime*(k<.5?.012:.018);float c=cos(a),s=sin(a);p=vec3(c*p.x+s*p.z,p.y,-s*p.x+c*p.z);}
+        vec4 eye=uView*vec4(p,1.0);gl_Position=uProjection*eye;
+        gl_PointSize=clamp(aSize*uPixelRatio*23.0/max(1.0,-eye.z),.8,12.0*uPixelRatio);
+        vAlpha=.78+.22*sin(uTime*.7+aPosition.x*8.0+aPosition.z*5.0);
+        if(k<.5){vec3 n=normalize(mat3(uView)*p);vAlpha*=.40+.60*max(0.0,n.z);}
+      }`;
+      const fragment=`precision mediump float;varying vec3 vColor;varying float vKind;varying float vAlpha;
+      void main(){vec2 xy=gl_PointCoord*2.0-1.0;float rr=dot(xy,xy);if(rr>1.0)discard;
+        float z=sqrt(1.0-rr);float light=.42+.58*max(0.0,dot(vec3(xy,z),normalize(vec3(-.4,.5,1.))));
+        float edge=smoothstep(1.0,.65,rr);float core=pow(z,7.0);
+        gl_FragColor=vec4(vColor*(light+.28*core),edge*vAlpha*(vKind>1.5?.6:.94));}`;
+      function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}
+      function program(v,f){const p=gl.createProgram();gl.attachShader(p,shader(gl.VERTEX_SHADER,v));gl.attachShader(p,shader(gl.FRAGMENT_SHADER,f));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(p));return p}
+      const pointProgram=program(vertex,fragment);
+      const glowProgram=program(`attribute vec2 aPosition;void main(){gl_Position=vec4(aPosition,0.,1.);}`,`precision mediump float;uniform vec2 uResolution;uniform float uRadius;void main(){float d=length(gl_FragCoord.xy-uResolution*.5)/uRadius;float halo=exp(-abs(d-1.)*12.)*.12+exp(-d*d*1.7)*.055;gl_FragColor=vec4(vec3(.019,.027,.043)+vec3(1.,.28,.045)*halo,1.);}`);
+      const glowBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,glowBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
+      const glowPosition=gl.getAttribLocation(glowProgram,'aPosition'),glowResolution=gl.getUniformLocation(glowProgram,'uResolution'),glowRadius=gl.getUniformLocation(glowProgram,'uRadius');
+      const solidProgram=program(`attribute vec3 aPosition;uniform mat4 uView;uniform mat4 uProjection;varying vec3 vNormal;void main(){vNormal=mat3(uView)*normalize(aPosition);gl_Position=uProjection*uView*vec4(aPosition,1.0);}`,`precision mediump float;varying vec3 vNormal;void main(){vec3 n=normalize(vNormal);float rim=pow(1.0-abs(n.z),3.0);float light=max(0.0,dot(n,normalize(vec3(-.5,.4,1.))));gl_FragColor=vec4(vec3(.028,.009,.004)+vec3(.07,.017,.003)*light+vec3(.24,.052,.008)*rim,1.0);}`);
+      let seed=20261023;function random(){seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}
+      const points=[];function point(x,y,z,r,g,b,size,kind){points.push(x,y,z,r,g,b,size,kind)}
+      // Dense spherical shell with latitude ribbons and organic bright filaments.
+      for(let i=0;i<26000;i++){const y=1-2*(i+.5)/26000;const a=i*2.39996323;const t=Math.sqrt(1-y*y);const r=2+(random()-.5)*.027;
+        const x=Math.cos(a)*t,z=Math.sin(a)*t;const band=Math.pow(Math.abs(Math.sin(y*34+a*.025)),18);const flow=Math.pow(.5+.5*Math.sin(x*13+Math.sin(z*9)+y*19),10);const hot=random();const glow=.45+random()*.4+band*.25+flow*.3;
+        point(x*r,y*r,z*r,glow,.21+glow*.24+hot*.09,.035+hot*.065,.48+random()*.48+band*.3,0)}
+      for(let i=0;i<2400;i++){const y=random()*2-1,a=random()*Math.PI*2,t=Math.sqrt(1-y*y),r=2.03+Math.pow(random(),3)*.18;point(Math.cos(a)*t*r,y*r,Math.sin(a)*t*r,.9,.3+random()*.23,.06,.35+random()*.7,0)}
+      // Two distinct annuli. Their small vertical scatter makes them a real volume.
+      for(let ring=0;ring<2;ring++)for(let i=0;i<9000;i++){const a=random()*Math.PI*2;const r=(ring===0?2.85:3.72)+random()*(ring===0?.48:.30);const h=(random()-.5)*.055;const c=.55+random()*.45;point(Math.cos(a)*r,h,Math.sin(a)*r,c,c*.96,c*.91,.35+Math.pow(random(),3)*.8,1)}
+      for(let i=0;i<1600;i++){const z=random()*2-1,a=random()*6.283,t=Math.sqrt(1-z*z),r=38+random()*35;const c=.28+random()*.62;point(Math.cos(a)*t*r,z*r,Math.sin(a)*t*r,c*.8,c*.86,c,1+random()*2.7,2)}
+      const pointBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,pointBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(points),gl.STATIC_DRAW);
+      const sphere=[];function spherePoint(lat,lon){return [1.994*Math.sin(lat)*Math.cos(lon),1.994*Math.cos(lat),1.994*Math.sin(lat)*Math.sin(lon)]}
+      for(let y=0;y<56;y++)for(let x=0;x<96;x++){const a=spherePoint(y/56*Math.PI,x/96*Math.PI*2),b=spherePoint((y+1)/56*Math.PI,x/96*Math.PI*2),c=spherePoint((y+1)/56*Math.PI,(x+1)/96*Math.PI*2),d=spherePoint(y/56*Math.PI,(x+1)/96*Math.PI*2);sphere.push(...a,...b,...c,...a,...c,...d)}
+      const sphereBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,sphereBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(sphere),gl.STATIC_DRAW);
+      const locations=p=>({view:gl.getUniformLocation(p,'uView'),projection:gl.getUniformLocation(p,'uProjection'),position:gl.getAttribLocation(p,'aPosition')});const pl=locations(pointProgram),sl=locations(solidProgram);pl.color=gl.getAttribLocation(pointProgram,'aColor');pl.size=gl.getAttribLocation(pointProgram,'aSize');pl.kind=gl.getAttribLocation(pointProgram,'aKind');pl.time=gl.getUniformLocation(pointProgram,'uTime');pl.ratio=gl.getUniformLocation(pointProgram,'uPixelRatio');
+      const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];const norm=a=>{const l=Math.hypot(...a);return a.map(x=>x/l)};
+      function viewMatrix(){const z=[Math.sin(state.yaw)*Math.cos(state.pitch),Math.sin(state.pitch),Math.cos(state.yaw)*Math.cos(state.pitch)],baseX=norm(cross([0,1,0],z)),baseY=cross(z,baseX),c=Math.cos(state.roll),s=Math.sin(state.roll);const x=baseX.map((v,i)=>v*c+baseY[i]*s),y=baseY.map((v,i)=>v*c-baseX[i]*s);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,0,0,-state.distance,1])}
+      let width=0,height=0,ratio=1;
+      renderScene=(time)=>{const w=innerWidth,h=innerHeight;ratio=Math.min(devicePixelRatio||1,1.75);if(w!==width||h!==height||canvas.width!==Math.round(w*ratio)){width=w;height=h;canvas.width=Math.round(w*ratio);canvas.height=Math.round(h*ratio);gl.viewport(0,0,canvas.width,canvas.height)}
+        const aspect=w/h;const f=Math.min(1/Math.tan(48*Math.PI/360),aspect*2.5);const near=.1,far=150;const projection=new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)/(near-far),-1,0,0,2*far*near/(near-far),0]);const view=viewMatrix();
+        gl.clearColor(.019,.027,.043,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthMask(true);gl.disable(gl.BLEND);
+        gl.disable(gl.DEPTH_TEST);gl.useProgram(glowProgram);gl.uniform2f(glowResolution,canvas.width,canvas.height);gl.uniform1f(glowRadius,canvas.height*f/Math.sqrt(state.distance*state.distance-4));gl.bindBuffer(gl.ARRAY_BUFFER,glowBuffer);gl.enableVertexAttribArray(glowPosition);gl.vertexAttribPointer(glowPosition,2,gl.FLOAT,false,0,0);gl.drawArrays(gl.TRIANGLES,0,6);gl.disableVertexAttribArray(glowPosition);gl.enable(gl.DEPTH_TEST);
+        gl.useProgram(solidProgram);gl.uniformMatrix4fv(sl.view,false,view);gl.uniformMatrix4fv(sl.projection,false,projection);gl.bindBuffer(gl.ARRAY_BUFFER,sphereBuffer);gl.enableVertexAttribArray(sl.position);gl.vertexAttribPointer(sl.position,3,gl.FLOAT,false,0,0);gl.drawArrays(gl.TRIANGLES,0,sphere.length/3);gl.disableVertexAttribArray(sl.position);
+        gl.useProgram(pointProgram);gl.uniformMatrix4fv(pl.view,false,view);gl.uniformMatrix4fv(pl.projection,false,projection);gl.uniform1f(pl.time,reduceMotion?0:time);gl.uniform1f(pl.ratio,ratio);gl.bindBuffer(gl.ARRAY_BUFFER,pointBuffer);
+        for(const [loc,size,offset] of [[pl.position,3,0],[pl.color,3,12],[pl.size,1,24],[pl.kind,1,28]]){gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,size,gl.FLOAT,false,32,offset)}gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);gl.depthMask(false);gl.drawArrays(gl.POINTS,0,points.length/8);gl.depthMask(true);for(const loc of [pl.position,pl.color,pl.size,pl.kind])gl.disableVertexAttribArray(loc);
+      };
+      canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();toast('图形上下文已暂停，请刷新页面恢复星球。')});
+    }
+    // Pointer, touch, and keyboard share the same camera targets as hand input.
+    const pointers=new Map();let pinchDistance=0,manualUntil=0;
+    function manual(){manualUntil=performance.now()+1400;resetHand()}
+    canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});manual();if(pointers.size===2){const [a,b]=[...pointers.values()];pinchDistance=Math.hypot(a.x-b.x,a.y-b.y)}});
+    canvas.addEventListener('pointermove',e=>{const p=pointers.get(e.pointerId);if(!p)return;manual();const dx=e.clientX-p.x,dy=e.clientY-p.y;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2){const [a,b]=[...pointers.values()],d=Math.hypot(a.x-b.x,a.y-b.y);if(pinchDistance>0)state.targetDistance=clamp(state.targetDistance*pinchDistance/Math.max(1,d),MIN_DISTANCE,MAX_DISTANCE);pinchDistance=d}else{state.targetYaw-=dx*.006;state.targetPitch=clamp(state.targetPitch+dy*.004,-1.1,1.1)}});
+    for(const name of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(name,e=>{pointers.delete(e.pointerId);pinchDistance=0});
+    canvas.addEventListener('wheel',e=>{e.preventDefault();manual();state.targetDistance=clamp(state.targetDistance*Math.exp(clamp(e.deltaY,-180,180)*.0015),MIN_DISTANCE,MAX_DISTANCE)},{passive:false});
+    document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='r'&&!$('help-dialog').open)resetView();if(document.activeElement!==canvas)return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();manual();if(e.key==='ArrowUp')state.targetDistance=clamp(state.targetDistance-.65,MIN_DISTANCE,MAX_DISTANCE);if(e.key==='ArrowDown')state.targetDistance=clamp(state.targetDistance+.65,MIN_DISTANCE,MAX_DISTANCE);if(e.key==='ArrowLeft')state.targetYaw+=.12;if(e.key==='ArrowRight')state.targetYaw-=.12}});
+
+    // Palm geometry is independent of finger-tip spread, so making a fist does not zoom.
+    const distance2=(a,b)=>Math.hypot((a.x-b.x)*(video.videoWidth/Math.max(1,video.videoHeight)||4/3),a.y-b.y);
+    let detector=null,stream=null,connecting=false,session=0,lastVideoTime=-1,lastDetect=0,lastSeen=0,lastHandedness='',hand=null,candidate='',candidateSince=0,stableGesture='none';
+    const video=$('camera'),overlay=$('skeleton'),ctx=overlay.getContext('2d');
+    function resetHand(){hand=null;candidate='';stableGesture='none';lastHandedness='';for(const id of ['g-rotate','g-fist','g-open'])$(id).classList.remove('active')}
+    function setStatus(s){if($('status').textContent!==s)$('status').textContent=s}
+    function fingerExtended(p,tip,pip,mcp){const a=p[mcp],b=p[pip],c=p[tip],ux=a.x-b.x,uy=a.y-b.y,uz=a.z-b.z,vx=c.x-b.x,vy=c.y-b.y,vz=c.z-b.z;const cos=(ux*vx+uy*vy+uz*vz)/(Math.hypot(ux,uy,uz)*Math.hypot(vx,vy,vz)+1e-8);return cos<-.65&&distance2(p[tip],p[0])>distance2(p[pip],p[0])*1.12}
+    function classify(p){const extended=[[8,6,5],[12,10,9],[16,14,13],[20,18,17]].filter(([tip,pip,mcp])=>fingerExtended(p,tip,pip,mcp)).length;const thumb=distance2(p[4],p[17])>distance2(p[5],p[17])*1.28;return extended===4&&thumb?'open':extended===0?'fist':'rotate'}
+    const connections=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[0,17],[17,18],[18,19],[19,20]];
+    function drawHand(p){ctx.clearRect(0,0,overlay.width,overlay.height);if(!p)return;const vw=video.videoWidth,vh=video.videoHeight,s=Math.max(overlay.width/vw,overlay.height/vh),ox=(overlay.width-vw*s)/2,oy=(overlay.height-vh*s)/2;const xy=n=>[n.x*vw*s+ox,n.y*vh*s+oy];ctx.strokeStyle='#ffc08e';ctx.lineWidth=1.5;ctx.beginPath();for(const [a,b] of connections){ctx.moveTo(...xy(p[a]));ctx.lineTo(...xy(p[b]))}ctx.stroke();ctx.fillStyle='#ffe1c1';for(const n of p){ctx.beginPath();ctx.arc(...xy(n),2.5,0,Math.PI*2);ctx.fill()}}
+    function processHand(result,now){const p=result.landmarks?.[0];if(!p){drawHand(null);if(now-lastSeen>250){resetHand();$('tracking').textContent='请将手放入画面';$('gesture-name').textContent='SEARCHING';setStatus('伸出一只手，让星球感受你')}return}
+      const handedness=result.handedness?.[0]?.[0]?.categoryName||'';
+      if(now-lastSeen>250||(lastHandedness&&handedness!==lastHandedness))resetHand();lastSeen=now;lastHandedness=handedness;drawHand(p);$('tracking').textContent='已捕捉手部';if(now<manualUntil)return;
+      const gesture=classify(p);const scale=(distance2(p[0],p[9])+distance2(p[5],p[17]))/2;const angle=Math.atan2(p[0].y-p[9].y,(p[9].x-p[0].x)*video.videoWidth/video.videoHeight);
+      if(gesture!==candidate){candidate=gesture;candidateSince=now}
+      if(now-candidateSince<180){hand=null;return}
+      if(!hand||stableGesture!==gesture){stableGesture=gesture;hand={scale,baseScale:scale,angle,baseDistance:state.targetDistance,progress:0};}
+      const delta=Math.atan2(Math.sin(angle-hand.angle),Math.cos(angle-hand.angle));hand.angle=angle;
+      if(Math.abs(delta)<.45){state.targetRoll+=delta*.95;state.targetYaw-=delta*.65}
+      hand.scale+=(scale-hand.scale)*.28;
+      const ratio=hand.scale/Math.max(.01,hand.baseScale);
+      if(gesture==='fist'){const progress=clamp((1-ratio-.035)/.38,0,1);hand.progress=Math.max(hand.progress,progress);state.targetDistance=clamp(hand.baseDistance+(MAX_DISTANCE-hand.baseDistance)*hand.progress**2,MIN_DISTANCE,MAX_DISTANCE)}
+      if(gesture==='open'){const progress=clamp((ratio-1-.04)/.65,0,1);hand.progress=Math.max(hand.progress,progress);state.targetDistance=clamp(hand.baseDistance-(hand.baseDistance-MIN_DISTANCE)*(1-(1-hand.progress)**3),MIN_DISTANCE,MAX_DISTANCE)}
+      $('gesture-name').textContent=gesture==='fist'?'PULL AWAY':gesture==='open'?'COME CLOSER':'ROTATE';
+      for(const g of ['fist','open','rotate'])$('g-'+g).classList.toggle('active',g===gesture);
+      setStatus(gesture==='fist'?'握拳后收 · 正在拉远':gesture==='open'?(state.targetDistance<MIN_DISTANCE+.08?'已抵达最近轨道 · 为你停留':'张开前推 · 正在靠近'):'转动手腕 · 星球随你旋转');
+    }
+    let inferenceBusy=false,loadController=null;
+    // All dependencies are shipped with this page. Relative paths also work at
+    // https://username.github.io/repository/ (no CDN or Google Storage requests).
+    const handAssets=new Map();
+    const HAND_FILES=[
+      {name:'hands.js',size:45581,hash:'poshyVU9YUOE9/RZYi5G4C48nP33OSkVovodYV4zhHM='},
+      {name:'hands.binarypb',size:550,hash:'q3bEIV/KmcwtsbWIXLg5jSEOWevmhSRfcuaStLWEIeQ='},
+      {name:'hands_solution_packed_assets_loader.js',size:8327,hash:'0FwHOmKgyNLSHBi8jxWEJOzgB46gCmNulScIOxDKHhc='},
+      {name:'hands_solution_packed_assets.data',size:4326731,hash:'vc57Zr/Fs5uoakd3XJjgsYb+c/gwjCJ5+FKvTIn/30I='},
+      {name:'hand_landmark_full.tflite',size:5478688,hash:'jAJogsnsBZzg+OdSZr7lqaI8NBpA4AAN91U3TT0bm2g='},
+      {name:'hands_solution_simd_wasm_bin.js',size:276479,hash:'dyAXLgd1Y25klV+xCRlYyClOAaoQDDJytZsqVDwCjLU=',simd:true},
+      {name:'hands_solution_simd_wasm_bin.wasm',size:6026259,hash:'eO9+uG68ZCSsBrE/ibmh/AH/NeB1ION96YiHz4jAZlM=',simd:true},
+      {name:'hands_solution_wasm_bin.js',size:276474,hash:'Lh+qmWWof0ljFuhXMcQb3h2bB91Ej2zTD1wiYrzTXik=',simd:false},
+      {name:'hands_solution_wasm_bin.wasm',size:5917209,hash:'TnDq+AY+DprBDmgtnWtVwI0HiPCo1Jkl4uSEY2Um4Vc=',simd:false}
+    ];
+    const abortError=()=>new DOMException('已取消手势加载','AbortError');
+    function checkAborted(signal){if(signal?.aborted)throw abortError()}
+    function handError(message){return Object.assign(new Error(message),{name:'HandLoadError'})}
+    function bounded(promise,ms,message,signal){
+      return new Promise((resolve,reject)=>{
+        const finish=(fn,value)=>{clearTimeout(timer);signal?.removeEventListener('abort',cancel);fn(value)};
+        const cancel=()=>finish(reject,abortError());
+        const timer=setTimeout(()=>finish(reject,handError(message)),ms);
+        promise.then(value=>finish(resolve,value),error=>finish(reject,error));
+        signal?.addEventListener('abort',cancel,{once:true});if(signal?.aborted)cancel();
+      });
+    }
+    async function fetchHandAsset(file,signal,onProgress){
+      const url=new URL('assets/mediapipe-hands/'+file.name,document.baseURI).href;
+      for(let attempt=0;attempt<2;attempt++){
+        checkAborted(signal);
+        const request=new AbortController();let idleTimer,timedOut=false;
+        const cancel=()=>request.abort();signal.addEventListener('abort',cancel,{once:true});
+        const expire=()=>{timedOut=true;request.abort()};
+        const totalTimer=setTimeout(expire,60000);
+        const heartbeat=()=>{clearTimeout(idleTimer);idleTimer=setTimeout(expire,12000)};
+        try{
+          heartbeat();
+          const response=await fetch(url,{signal:request.signal,cache:attempt?'reload':'default'});
+          if(!response.ok)throw Object.assign(handError(file.name+' 返回 HTTP '+response.status),{status:response.status});
+          const chunks=[];let length=0;
+          if(response.body?.getReader){
+            const reader=response.body.getReader();
+            while(true){const {done,value}=await reader.read();if(done)break;heartbeat();chunks.push(value);length+=value.length;onProgress(length)}
+          }else{const bytes=new Uint8Array(await response.arrayBuffer());chunks.push(bytes);length=bytes.length;onProgress(length)}
+          if(length!==file.size)throw handError(file.name+' 文件不完整');
+          const bytes=new Uint8Array(length);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length}
+          const digest=await crypto.subtle.digest('SHA-256',bytes);
+          if(btoa(String.fromCharCode(...new Uint8Array(digest)))!==file.hash)throw handError(file.name+' 校验失败');
+          checkAborted(signal);
+          return new Blob([bytes],{type:file.name.endsWith('.js')?'text/javascript':file.name.endsWith('.wasm')?'application/wasm':'application/octet-stream'});
+        }catch(error){
+          checkAborted(signal);
+          if(error.status===404||attempt===1)throw handError(timedOut?file.name+' 下载超时':error.name==='HandLoadError'?error.message:file.name+' 下载失败');
+          onProgress(0);console.warn('Retrying same-site hand resource:',file.name,error.message);
+        }finally{clearTimeout(idleTimer);clearTimeout(totalTimer);signal.removeEventListener('abort',cancel);request.abort()}
+      }
+    }
+    async function prepareHandAssets(signal){
+      if(location.protocol==='file:')throw handError('请通过本地预览或 GitHub Pages 打开，直接双击文件无法读取模型');
+      // Use the SDK's exact feature probe, including instantiation, so both
+      // choose the same WASM variant on Safari and older mobile browsers.
+      let simd=false;
+      try{await WebAssembly.instantiate(new Uint8Array([0,97,115,109,1,0,0,0,1,4,1,96,0,0,3,2,1,0,10,9,1,7,0,65,0,253,15,26,11]));simd=true}catch{}
+      checkAborted(signal);
+      const files=HAND_FILES.filter(file=>file.simd===undefined||file.simd===simd);
+      const loaded=new Map(files.map(f=>[f.name,handAssets.has(f.name)?f.size:0])),total=files.reduce((s,f)=>s+f.size,0);
+      const batch=new AbortController(),cancel=()=>batch.abort();signal.addEventListener('abort',cancel,{once:true});
+      const progress=()=>{if(signal.aborted||!stream||!connecting)return;const percent=Math.min(100,Math.floor([...loaded.values()].reduce((a,b)=>a+b,0)/total*100));setStatus('正在加载本站手势资源 · '+percent+'%');$('tracking').textContent='资源加载 '+percent+'%'};
+      progress();
+      try{
+        await Promise.all(files.map(async file=>{
+          if(handAssets.has(file.name))return;
+          const blob=await fetchHandAsset(file,batch.signal,length=>{loaded.set(file.name,length);progress()});
+          checkAborted(batch.signal);handAssets.set(file.name,URL.createObjectURL(blob));
+          console.info('Same-site hand resource verified:',file.name,file.size);
+        }));
+      }catch(error){batch.abort();throw error}finally{signal.removeEventListener('abort',cancel)}
+    }
+    async function loadDetector(signal){
+      await prepareHandAssets(signal);checkAborted(signal);
+      setStatus('资源已就绪 · 正在启动识别引擎…');$('tracking').textContent='启动识别引擎';
+      // Each attempt owns a separate runtime. Removing it also cancels late
+      // scripts/WASM callbacks; a failed attempt cannot poison the next retry.
+      const runtime=document.createElement('iframe');runtime.hidden=true;runtime.setAttribute('aria-hidden','true');runtime.title='本地手势识别引擎';
+      let engine,initialized=false,closed=false;
+      const close=()=>{if(closed)return;closed=true;try{if(initialized)Promise.resolve(engine.close()).catch(()=>{})}catch{}runtime.remove()};
+      try{
+        await bounded(new Promise((resolve,reject)=>{runtime.onload=resolve;runtime.onerror=()=>reject(handError('无法创建识别环境'));runtime.src='about:blank';document.body.appendChild(runtime)}),5000,'识别环境启动超时',signal);
+        const host=runtime.contentWindow,doc=runtime.contentDocument;
+        let rejectRuntime,runtimeFailure=null;
+        const failed=new Promise((_,reject)=>{rejectRuntime=reject});failed.catch(()=>{});
+        const failRuntime=error=>{runtimeFailure=error;rejectRuntime(error)};
+        host.addEventListener('error',e=>failRuntime(handError('识别运行文件出错：'+(e.message||'脚本加载失败'))));
+        host.addEventListener('unhandledrejection',e=>failRuntime(handError('识别引擎出错：'+(e.reason?.message||String(e.reason)))));
+        await bounded(Promise.race([failed,new Promise((resolve,reject)=>{const tag=doc.createElement('script');tag.src=handAssets.get('hands.js');tag.onload=resolve;tag.onerror=()=>reject(handError('无法启动识别库'));doc.head.appendChild(tag)})]),10000,'识别库启动超时',signal);
+        engine=new host.Hands({locateFile:file=>{const url=handAssets.get(file);if(!url)throw handError('缺少启动资源：'+file);return url}});
+        engine.setOptions({maxNumHands:1,modelComplexity:1,minDetectionConfidence:.6,minTrackingConfidence:.65,selfieMode:false});
+        let result={landmarks:[],handedness:[]};
+        engine.onResults(r=>{result={landmarks:r.multiHandLandmarks||[],handedness:(r.multiHandedness||[]).map(h=>[{categoryName:h.label}])}});
+        await bounded(Promise.race([engine.initialize(),failed]),30000,'识别引擎启动超时，请重试或换用 Chrome / Edge',signal);initialized=true;
+        // A frame-owned canvas avoids cross-realm HTMLVideoElement instanceof
+        // checks in MediaPipe, and tests real inference before reporting ready.
+        const input=doc.createElement('canvas'),draw=input.getContext('2d');
+        async function detectForVideo(image){
+          if(closed)throw abortError();if(runtimeFailure)throw runtimeFailure;const width=image.videoWidth||image.width,height=image.videoHeight||image.height;
+          if(input.width!==width)input.width=width;if(input.height!==height)input.height=height;
+          if(!input.width||!input.height)throw handError('摄像头画面尚未就绪');
+          draw.drawImage(image,0,0,input.width,input.height);
+          await bounded(engine.send({image:input}),15000,'手势推理超时，请重新连接',signal);if(runtimeFailure)throw runtimeFailure;return result;
+        }
+        setStatus('识别引擎已启动 · 正在验证第一帧…');$('tracking').textContent='验证摄像头画面';
+        await detectForVideo(video);checkAborted(signal);
+        console.info('Hand tracking ready: same-site assets and first-frame inference succeeded');
+        return {detectForVideo,close};
+      }catch(error){close();throw error}
+    }
+    function stopCamera(message='摄像头已关闭 · 可以继续用鼠标探索'){session++;loadController?.abort();loadController=null;detector?.close();detector=null;inferenceBusy=false;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;video.srcObject=null;connecting=false;resetHand();drawHand(null);$('live-dot').classList.remove('on');$('camera-overlay').style.display='flex';$('camera-caption').textContent='摄像头未连接';$('tracking').textContent='尚未连接';$('gesture-name').textContent='STANDBY';$('camera-toggle').textContent='开启手势探索';$('camera-toggle').disabled=false;setStatus(message)}
+    async function startCamera(){if(connecting||stream)return;connecting=true;const token=++session,controller=new AbortController();loadController=controller;$('camera-toggle').disabled=true;$('camera-toggle').textContent='等待授权…';setStatus('请允许使用摄像头，开启手势探索');try{
+        if(!navigator.mediaDevices?.getUserMedia)throw Object.assign(new Error('insecure'),{name:'SecurityError'});
+        const media=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480},frameRate:{ideal:24,max:30}},audio:false});
+        if(token!==session){media.getTracks().forEach(t=>t.stop());return}stream=media;video.srcObject=stream;await bounded(video.play(),15000,'摄像头画面启动超时，请重试',controller.signal);if(token!==session)return;
+        stream.getVideoTracks()[0].addEventListener('ended',()=>{if(token===session)stopCamera('摄像头连接已中断，请重新开启')});
+        $('camera-overlay').style.display='none';$('live-dot').classList.add('on');$('tracking').textContent='正在加载手势模型';$('camera-toggle').textContent='关闭摄像头';$('camera-toggle').disabled=false;setStatus('摄像头已连接 · 首次加载手势模型…');
+        const readyDetector=await loadDetector(controller.signal);if(token!==session){readyDetector.close();return}detector=readyDetector;connecting=false;lastVideoTime=-1;lastSeen=0;setStatus('伸出一只手，让星球感受你');
+      }catch(error){if(token!==session)return;console.warn('Camera/hand tracking:',error);const inWeChat=/MicroMessenger/i.test(navigator.userAgent||'');const browserHint=inWeChat?'微信中无法开启摄像头时，点右上角「…」选择「在浏览器打开」。也可直接用手指拖动星球、双指缩放。':'请允许摄像头权限，或使用 Safari / Chrome / Edge 打开。';const messages={NotAllowedError:'摄像头未获授权 · 可重试或使用触屏探索',NotFoundError:'没有检测到摄像头 · 可使用触屏或鼠标探索',NotReadableError:'摄像头被占用 · 关闭其他视频应用后重试',SecurityError:'当前浏览器限制了摄像头 · 可在浏览器中打开'};const detail=error.name==='HandLoadError'?error.message:'识别引擎启动失败，请重试或换用 Chrome / Edge';stopCamera(messages[error.name]||detail);toast(['NotAllowedError','SecurityError'].includes(error.name)?browserHint:messages[error.name]||detail+'。可继续用触屏或鼠标探索。')}
+    }
+    $('camera-toggle').onclick=()=>{if(stream||connecting)stopCamera();else startCamera()};
+    window.addEventListener('pagehide',()=>{stopCamera();for(const url of handAssets.values())URL.revokeObjectURL(url);handAssets.clear()});
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)resetHand()});
+    let lastFrame=performance.now(),lastHud=0;
+    function frame(now){requestAnimationFrame(frame);if(document.hidden)return;const dt=Math.min((now-lastFrame)/1000,.05);lastFrame=now;const smoothing=1-Math.exp(-dt*8);for(const [key,target] of [['distance','targetDistance'],['yaw','targetYaw'],['pitch','targetPitch'],['roll','targetRoll']])state[key]+=(state[target]-state[key])*smoothing;renderScene(now/1000);
+      if(now-lastHud>100){$('distance').textContent=state.distance.toFixed(1);$('distance-meter').style.width=((state.distance-MIN_DISTANCE)/(MAX_DISTANCE-MIN_DISTANCE)*100)+'%';lastHud=now}
+      if(detector&&stream&&!connecting&&!inferenceBusy&&video.readyState>=2&&now-lastDetect>65&&video.currentTime!==lastVideoTime){lastDetect=now;lastVideoTime=video.currentTime;inferenceBusy=true;const token=session;detector.detectForVideo(video).then(result=>{if(token===session&&!document.hidden)processHand(result,performance.now())}).catch(error=>{if(token===session){console.warn(error);stopCamera('手势识别暂时中断 · 点击重新连接')}}).finally(()=>{if(token===session)inferenceBusy=false})}
+    }
+    requestAnimationFrame(frame);startCamera();
+  })();
+  </script>
+</body>
+</html>
